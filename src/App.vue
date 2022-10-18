@@ -3,14 +3,31 @@ import {ref} from 'vue'
 import Calculator from './components/calc.vue'
 // import { useRoute } from 'vue-router'
 const count = ref(1)
-
+const explain = ref(false)
+const defaults = {
+  init_vcpus: 1,
+  init_hrs: 24,
+  init_days: 7,
+  init_weeks: 16,
+  init_users: 20,
+  init_id: 78,
+  init_multiplier: 1,
+  init_prefix: "m3",
+}
 </script>
 
 <template>
+  <!-- instance size buttons -->
   <button @click="count--">Remove Instance Size</button>
   <button @click="count++">Add Instance Size</button>
+
+  <!-- show explanation checkbox -->
+  <input type="checkbox" id="checkbox" v-model="explain"/> 
+  <label for="checkbox">show explanation</label>
+
+  <!-- calculator iterator -->
   <li v-for="i in count">
-    <Calculator />
+    <Calculator :doExplain="explain" v-bind="defaults"/>
   </li>
 </template>
 
