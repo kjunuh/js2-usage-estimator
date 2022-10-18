@@ -26,6 +26,12 @@ const flavorlist = ref([
   {name: 'g3.xl', vcpus:32, id:102},
 ])
 
+function name_from_id(id:number) {
+  flavorlist.value.forEach( (flavor) => {
+    if (flavor.id==id) return flavor.name
+  }
+)
+
 const flavor_charge_multipliers = ref([
   {flavor: "m3", multiplier: 1},
   {flavor: "r3", multiplier: 2},
