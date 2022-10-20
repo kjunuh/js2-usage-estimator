@@ -1,26 +1,41 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 
 const props = defineProps<{
   doExplain: boolean
-  init_vcpus: number
+  calcid:number
+
+  init_vcpus:number
   init_hrs:number
   init_days:number
   init_weeks:number
   init_users:number
-  init_id:number
+  init_flavorId:number
   init_multiplier:number
   init_prefix: string
 }>()
-console.log(props.init_users)
+const emit = defineEmits(['emitSUs'])
+
 const vcpus = ref(props.init_vcpus)
 const hrs = ref(props.init_hrs)
 const days = ref(props.init_days)
 const weeks = ref(props.init_weeks)
 const users = ref(props.init_users)
-const id = ref(props.init_id)
+const flavorId = ref(props.init_flavorId)
 const multiplier = ref(props.init_multiplier)
 const prefix = ref(props.init_prefix)
+
+const calcTotalSUs = computed(() => {
+  let total = multiplier.value*vcpus.value*hrs.value*days.value*weeks.value*users.value
+  emit('emitSUs', total)
+  return total
+})
+
+const calcUserSUs = computed(() => {
+  
+  return multiplier.value*vcpus.value*hrs.value*days.value*weeks.value
+})
+
 const flavorlist = reactive([
   {name: 'm3.tiny', vcpus:1, id:78},
   {name: 'm3.small', vcpus:2, id:18},
@@ -47,9 +62,9 @@ const flavor_charge_multipliers: {[index: string]: number} = reactive({
 })
 
 function calcMultiplier() {
-  prefix.value = flavorlist.filter((elem) => elem.id == id.value)[0].name.split(".")[0]
+  prefix.value = flavorlist.filter((elem) => elem.id == flavorId.value)[0].name.split(".")[0]
   multiplier.value = flavor_charge_multipliers[prefix.value]
-  vcpus.value =  flavorlist.filter((elem) => elem.id == id.value)[0].vcpus
+  vcpus.value =  flavorlist.filter((elem) => elem.id == flavorId.value)[0].vcpus
 }
 
 </script>
@@ -59,7 +74,7 @@ function calcMultiplier() {
     <ul class="calc-list">
         <li class="calc-item">
             <div>Instance Size:</div>
-            <select v-model="id" @change="calcMultiplier()"> 
+            <select v-model="flavorId" @change="calcMultiplier()"> 
               <!-- // @change="calcMultiplier()"> -->
                 <option v-for="flavor in flavorlist" :value="flavor.id"> 
                     {{flavor.name}} ({{flavor.vcpus}} vCPUs)
@@ -83,16 +98,16 @@ function calcMultiplier() {
             <input v-model.number="weeks"/>
         </li>
         <li class="calc-item">
-            <div>Total SUs</div> 
-            <div>{{(multiplier*vcpus*hrs*days*weeks*users).toLocaleString()}} </div>
+            <div>SUs per user</div>
+            <div>{{calcUserSUs.toLocaleString()}}</div>
         </li>
         <li class="calc-item">
-            <div>SUs per user</div>
-            <div>{{(multiplier*vcpus*hrs*days*weeks).toLocaleString()}}</div>
+            <div>Total SUs</div> 
+            <div>{{calcTotalSUs.toLocaleString()}} </div>
         </li>
     </ul>
     <!-- @change="calc"> -->
-    <div v-if="doExplain" > cost for {{vcpus}} vCPU x flavor multiplier of {{multiplier}} for {{prefix}} x {{hrs}} hours/day x {{days}} days/week x {{weeks}} weeks = {{multiplier*vcpus*hrs*days*weeks}} per user x {{users}} users = {{(multiplier*vcpus*hrs*days*weeks*users).toLocaleString()}} SUs</div>
+    <div v-if="doExplain" > cost for {{vcpus}} vCPU x {{multiplier}} flavor multiplier ({{prefix}}) x {{hrs}} hours/day x {{days}} days/week x {{weeks}} weeks = {{multiplier*vcpus*hrs*days*weeks}} per user x {{users}} users = {{calcTotalSUs.toLocaleString()}} SUs</div>
     <br>
 </main>
 </template>

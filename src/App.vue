@@ -1,25 +1,36 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref, reactive, computed} from 'vue'
 import Calculator from './components/calc.vue'
 // import { useRoute } from 'vue-router'
 const count = ref(1)
 const explain = ref(false)
+interface allSUs {}
+const allSUs: Array<number> = reactive([])
+const SUTotal = computed(() => {
+  let sum = 0
+  allSUs.forEach(a => sum += a)
+  return sum
+})
+
 const defaults = {
   init_vcpus: 1,
   init_hrs: 24,
   init_days: 7,
   init_weeks: 16,
   init_users: 20,
-  init_id: 78,
+  init_flavorId: 78,
   init_multiplier: 1,
   init_prefix: "m3",
 }
+
+console.log(allSUs)
+
 </script>
 
 <template>
   <!-- instance size buttons -->
-  <button @click="count--">Remove Instance Size</button>
-  <button @click="count++">Add Instance Size</button>
+  <button @click="() => {if(count != 1) {count--; allSUs.pop()}}">Remove Instance Size</button>
+  <button @click="() => {if(count != 14) count++}">Add Instance Size</button>
 
   <!-- show explanation checkbox -->
   <input type="checkbox" id="checkbox" v-model="explain"/> 
@@ -27,8 +38,12 @@ const defaults = {
 
   <!-- calculator iterator -->
   <li v-for="i in count">
-    <Calculator :doExplain="explain" v-bind="defaults"/>
+    <Calculator :calcid="i" @emitSUs="(val) => {allSUs[i-1] = val}" :doExplain="explain" v-bind="defaults"/>
   </li>
+  <div>Total: {{SUTotal}} </div>
+  <!-- {{(allSUs) => {allSUs[i]}}} -->
+  <!-- {{(allSUs, count) => {allSUs+count}}} -->
+  {{allSUs}}
 </template>
 
 <style scoped>
