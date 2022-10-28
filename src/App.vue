@@ -1,76 +1,136 @@
 <script setup lang="ts">
-import {ref, reactive, computed} from 'vue'
+import {ref, reactive, computed, onMounted, watch} from 'vue'
 import Calculator from './components/calc.vue'
 // import { useRoute } from 'vue-router'
 const count = ref(1)
-const explain = ref(false)
+var explain = ref(false)
+
+interface allVals {}
+var allVals: Array<{}> = reactive([])
+
 interface allSUs {}
-const allSUs: Array<number> = reactive([])
+var allSUs: Array<number> = reactive([])
 const SUTotal = computed(() => {
   let sum = 0
   allSUs.forEach(a => sum += a)
   return sum
 })
 
+
 const defaults = {
-  init_vcpus: 1,
-  init_hrs: 24,
-  init_days: 7,
-  init_weeks: 16,
-  init_users: 20,
-  init_flavorId: 78,
-  init_multiplier: 1,
-  init_prefix: "m3",
+  vcpus: 1,
+  hrs: 24,
+  days: 7,
+  weeks: 52,
+  users: 20,
+  flavorId: 78,
+  multiplier: 1,
+  prefix: 'm3'
 }
 
-console.log(allSUs)
+onMounted(() => {
+  count.value = JSON.parse(localStorage.getItem("count") || JSON.parse('1'))
+  explain.value = (localStorage.getItem("explain") === null) ? false : true
+  // console.log(localStorage.getItem('storedVals'))
+  // if((localStorage.getItem('storedVals') || []).length == 0) {
+  //   allVals = [defaults]
+  //   console.log(allVals)
+  //   console.log("nostorage")
+  // } else {
+  //   JSON.parse(localStorage.getItem('storedVals') || "").forEach((val: any) => {
+  //     allVals.push(val)
+  //   })
+  //   // console.log(JSON.parse(localStorage.getItem('storedVals') || ""))
+  //   console.log("LOADED FROM STORAGE")
+  // }
+  allVals.push(defaults)
+  console.log("allvals", allVals)
+})
+
+watch(explain, (newVal) => {
+  (newVal) ? localStorage.setItem("explain", "true") : localStorage.removeItem("explain")
+})
+
+function modrow (type: string) {
+  if(count.value != 1 && type == 'dec') {
+    count.value-- 
+    allSUs.pop()
+    allVals.pop()
+  }
+  if(count.value != 100 && type == 'inc') {
+    count.value++
+    allVals.push(defaults)
+  }
+  if(type=='rst') {
+    while (count.value > 1) {
+      modrow('dec')
+    }
+  }
+  localStorage.setItem('count', JSON.stringify(count.value))
+}
+
+// watch(count, (newVal) => {
+// })
 
 </script>
-
 <template>
+  {{allVals}}
   <!-- instance size buttons -->
-  <button @click="() => {if(count != 1) {count--; allSUs.pop()}}">Remove Instance Size</button>
-  <button @click="() => {if(count != 14) count++}">Add Instance Size</button>
-
-  <!-- show explanation checkbox -->
-  <input type="checkbox" id="checkbox" v-model="explain"/> 
-  <label for="checkbox">show explanation</label>
-
-  <!-- calculator iterator -->
-  <li v-for="i in count">
-    <Calculator :calcid="i" @emitSUs="(val) => {allSUs[i-1] = val}" :doExplain="explain" v-bind="defaults"/>
-  </li>
-  <div>Total: {{SUTotal}} </div>
-  <!-- {{(allSUs) => {allSUs[i]}}} -->
-  <!-- {{(allSUs, count) => {allSUs+count}}} -->
-  {{allSUs}}
+  <ol class="options-bar">
+    <li class="option">
+      <button @click="modrow('dec')">- Remove Row -</button>
+    </li>
+    <li class="option">  
+      <button @click="modrow('inc')">+ Add Row +</button>
+    </li>
+    <li class="option">  
+      <button @click="modrow('rst')">Reset Rows</button>
+    </li>
+    <!-- show explanation checkbox -->
+    <li class="option">
+      <input type="checkbox" id="checkbox" v-model="explain"/> 
+      <label for="checkbox">show explanation</label>
+    </li>
+    
+    <li class="option">  
+      <div><b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b></div>
+      {{allSUs}}
+    </li>
+  </ol>
+  <!-- <div class="calcs"> -->
+    <!-- calculator iterator -->
+    <li v-for="i in count">
+      <Calculator 
+        v-bind="defaults"
+        @emitSUs="(val) => {allSUs[i-1] = val}" 
+        @storeVals="(val) => {allVals[i-1] = val}" 
+        :doExplain="explain" 
+      />
+        <!-- @storeVals="(val) => {allVals[i-1] = val}" -->
+      </li>
+  <!-- </div> -->
+      <!-- {{allSUs.toLocaleString()}} -->
+  <!-- <div class="calcs"> -->
+    <div class="right">  
+      <b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b>
+    </div>
+  <!-- </div> -->
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-widt: 1024px) {
-  header {
+.options-bar {
     display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.option{
+  padding: 5px;
+}
+.right {
+  align-self: right;
+  margin-left: 760px;
 }
 </style>
