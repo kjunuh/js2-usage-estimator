@@ -5,7 +5,7 @@ import Calculator from './components/calc.vue'
 const count = ref(1)
 var explain = ref(false)
 
-interface allVals {}
+// interface allVals []
 var allVals: Array<{}> = reactive([])
 
 interface allSUs {}
@@ -29,22 +29,24 @@ const defaults = {
 }
 
 onMounted(() => {
+  console.log('localstore', localStorage.getItem('storedVals'))
   count.value = JSON.parse(localStorage.getItem("count") || JSON.parse('1'))
   explain.value = (localStorage.getItem("explain") === null) ? false : true
   // console.log(localStorage.getItem('storedVals'))
-  // if((localStorage.getItem('storedVals') || []).length == 0) {
-  //   allVals = [defaults]
-  //   console.log(allVals)
-  //   console.log("nostorage")
-  // } else {
-  //   JSON.parse(localStorage.getItem('storedVals') || "").forEach((val: any) => {
-  //     allVals.push(val)
-  //   })
-  //   // console.log(JSON.parse(localStorage.getItem('storedVals') || ""))
-  //   console.log("LOADED FROM STORAGE")
-  // }
-  allVals.push(defaults)
-  console.log("allvals", allVals)
+  if((localStorage.getItem('storedVals') || []).length == 0) {
+    allVals.push(defaults)
+    console.log(allVals)
+    console.log("nostorage")
+  } else {
+    // JSON.parse(localStorage.getItem('storedVals') || "").forEach((val: any) => {
+    //   allVals.push(val)
+    // })
+    // console.log(JSON.parse(localStorage.getItem('storedVals') || ""))
+    allVals = JSON.parse(localStorage.getItem('storedVals') || "fail")
+    console.log("LOADED FROM STORAGE", allVals)
+  }
+  // allVals.pus h(defaults)
+  // console.log("allvals", allVals)
 })
 
 watch(explain, (newVal) => {
@@ -67,6 +69,19 @@ function modrow (type: string) {
     }
   }
   localStorage.setItem('count', JSON.stringify(count.value))
+  // console.log(JSON.stringify(allVals))
+  localStorage.setItem('storedVals', JSON.stringify(allVals))
+}
+
+function storeLocal (i: number, val: number) {
+  localStorage.setItem('storedVals', JSON.stringify(allVals))
+  // console.log(JSON.stringify(val), i)
+}
+
+function testerfunc () {
+  console.log('allVals', allVals)
+  console.log('def', defaults)
+  console.log('vals', allVals[0])
 }
 
 // watch(count, (newVal) => {
@@ -74,9 +89,11 @@ function modrow (type: string) {
 
 </script>
 <template>
-  {{allVals}}
   <!-- instance size buttons -->
   <ol class="options-bar">
+    <li class="option">
+      <button @click="testerfunc">tester button</button>
+    </li>
     <li class="option">
       <button @click="modrow('dec')">- Remove Row -</button>
     </li>
@@ -101,10 +118,10 @@ function modrow (type: string) {
     <!-- calculator iterator -->
     <li v-for="i in count">
       <Calculator 
-        v-bind="defaults"
+        v-bind="allVals[i]"
         @emitSUs="(val) => {allSUs[i-1] = val}" 
-        @storeVals="(val) => {allVals[i-1] = val}" 
-        :doExplain="explain" 
+        @storeVals="(val) => {allVals[i-1] = val; storeLocal(i, val)}" 
+        :doExplain="explain"
       />
         <!-- @storeVals="(val) => {allVals[i-1] = val}" -->
       </li>

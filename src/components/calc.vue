@@ -26,23 +26,25 @@ var vals = reactive({
   prefix : props.prefix,
 })
 
-// const calcTotalSUs = computed(() => {
-//   let total = vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
-//   console.log(total)
-//   emit('emitSUs', total)
-//   // emit("storeVals", vals)
-//   // localStorage.set('test', 'testval')
-//   return total
-// })
-var calcTotalSUs = ref(vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users)
+const calcTotalSUs = computed(() => {
+  let total = vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
+  // console.log(total)
+  emit('emitSUs', total)
+  // emit("storeVals", vals)
+  // localStorage.set('test', 'testval')
+  return total
+})
+// var calcTotalSUs = ref(vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users)
 // onMounted(() => {
 //   calcTotalSUs.value = vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
 
 // })
 watch(vals, (newValue) => {
   emit('storeVals', newValue)
-  calcTotalSUs.value = vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
+  console.log('childemit', newValue)
+  // console.log(newValue)
 })
+
 
 const flavorlist = reactive([
   {name: 'm3.tiny', vcpus:1, id:78},
