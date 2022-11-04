@@ -52,14 +52,13 @@ watch(explain, (newVal) => {
 
 function modrow (type: string) {
   if(type == 'dec' && allVals.length > 1) {
-    console.log(allVals)
+    test.pop()
     allVals.pop()
-    console.log(allVals)
+    allSUs.pop()
   }
   if(type == 'inc' && allVals.length < 100) {
-    console.log(allVals)
+    test.push(1)  
     allVals.push(defaults)
-    console.log(allVals)
   }
   if(type=='rst') {
     while (allVals.length > 1) {
@@ -73,7 +72,7 @@ function modrow (type: string) {
 
 function storeLocal (i: number, val: number) {
   localStorage.setItem('storedVals', JSON.stringify(allVals))
-  console.log(JSON.stringify(val), i)
+  // console.log(JSON.stringify(val), i)
 }
 
 function testerfunc () {
@@ -82,16 +81,26 @@ function testerfunc () {
   console.log('vals', allVals[0])
 }
 
+var test = reactive([5])
+
 // watch(count, (newVal) => {
 // })
 
+// function testupdate () {
+//   test.push(1)
+// }
+
+// function testupdate2() {
+//   test.push(1)
+//   allVals.push(defaults)
+// }
 </script>
 <template>
   <!-- instance size buttons -->
   <ol class="options-bar">
-    <li class="option">
+    <!-- <li class="option">
       <button @click="testerfunc">tester button</button>
-    </li>
+    </li> -->
     <li class="option">
       <button @click="modrow('dec')">- Remove Row -</button>
     </li>
@@ -109,29 +118,29 @@ function testerfunc () {
     
     <li class="option">  
       <div><b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b></div>
-      {{allSUs}}
     </li>
   </ol>
   <!-- <div class="calcs"> -->
     <!-- calculator iterator -->
-    <li v-for="value, i in allVals">
+    <!-- <button @click="testupdate">o</button>
+    <button @click="testupdate2">asdasdf</button> -->
+    <li v-for="i in allVals.length">
       <!-- :vals="allVals[i]" -->
-      {{value}}
-      {{i}}
-      <Calculator 
-        v-bind="value" 
-        @emitSUs="(val) => {allSUs[i] = val}" 
-        @storeVals="(val) => {allVals[i] = val; storeLocal(i, val)}" 
-        :doExplain="explain"
+      <!-- {{value}} -->
+      <Calculator
+      v-bind="allVals[i-1]"
+      @emitSUs="(val) => {allSUs[i-1] = val}"
+      @storeVals="(val) => {allVals[i-1] = val; storeLocal(i-1, val)}"
+      :doExplain="explain"
       />
-        <!-- @storeVals="(val) => {allVals[i-1] = val}" -->
-      </li>
-  <!-- </div> -->
-      <!-- {{allSUs.toLocaleString()}} -->
-  <!-- <div class="calcs"> -->
-    <div class="right">  
-      <b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b>
-    </div>
+    </li>
+    <!-- </div> -->
+    <!-- {{allSUs.toLocaleString()}} -->
+    <!-- <div class="calcs"> -->
+      <div class="right">
+        <b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b>
+      </div>
+  <li v-for="i in test.length"></li>
   <!-- </div> -->
 </template>
 

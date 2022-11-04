@@ -22,13 +22,10 @@ const props = defineProps<{
   flavorId:number
   multiplier:number
   prefix: string
-  // vals: calcVals
+
 }>()
 
 const emit = defineEmits(['emitSUs', 'storeVals'])
-onMounted(() => {
-  console.log(props)
-})
 
 var vals = reactive({
   vcpus : props.vcpus,
@@ -57,7 +54,7 @@ const calcTotalSUs = computed(() => {
 
 watch(vals, (newValue) => {
   emit('storeVals', newValue)
-  console.log('childemit', newValue)
+//   console.log('childemit', newValue)
   // console.log(newValue)
 })
 
