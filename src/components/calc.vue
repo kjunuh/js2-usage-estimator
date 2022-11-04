@@ -40,22 +40,12 @@ var vals = reactive({
 
 const calcTotalSUs = computed(() => {
   let total = vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
-  // console.log(total)
   emit('emitSUs', total)
-  // emit("storeVals", vals)
-  // localStorage.set('test', 'testval')
   return total
 })
 
-// var calcTotalSUs = ref(vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users)
-// onMounted(() => {
-//   calcTotalSUs.value = vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
-// })
-
 watch(vals, (newValue) => {
   emit('storeVals', newValue)
-//   console.log('childemit', newValue)
-  // console.log(newValue)
 })
 
 
@@ -96,7 +86,6 @@ function calcMultiplier() {
         <li class="calc-item">
             <div>Instance Size:</div>
             <select v-model="vals.flavorId" @change="calcMultiplier()"> 
-              <!-- // @change="calcMultiplier()"> -->
                 <option v-for="flavor in flavorlist" :value="flavor.id"> 
                     {{flavor.name}} ({{flavor.vcpus}} vCPUs)
                 </option>    
@@ -127,7 +116,6 @@ function calcMultiplier() {
             <div>{{calcTotalSUs.toLocaleString()}} </div>
         </li>
     </ul>
-    <!-- @change="calc"> -->
     <div v-if="doExplain" > cost for {{vals.vcpus}} vCPU x {{vals.multiplier}} flavor multiplier ({{vals.prefix}}) x {{vals.hrs}} hours/day x {{vals.days}} days/week x {{vals.weeks}} weeks = {{calcTotalSUs/(vals.users)}} per user x {{vals.users}} users = {{calcTotalSUs.toLocaleString()}} SUs</div>
     <br>
 </main>

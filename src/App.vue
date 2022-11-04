@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import {ref, reactive, computed, onMounted, watch} from 'vue'
 import Calculator from './components/calc.vue'
-// import { useRoute } from 'vue-router'
+
 const count = ref(1)
 var explain = ref(false)
-
-// interface allVals []
 
 interface allSUs {}
 var allSUs: Array<number> = reactive([])
@@ -67,40 +65,18 @@ function modrow (type: string) {
   }
   localStorage.setItem('count', JSON.stringify(count.value))
   localStorage.setItem('storedVals', JSON.stringify(allVals))
-  // console.log(JSON.stringify(allVals))
 }
 
 function storeLocal (i: number, val: number) {
   localStorage.setItem('storedVals', JSON.stringify(allVals))
-  // console.log(JSON.stringify(val), i)
-}
-
-function testerfunc () {
-  console.log('allVals', allVals)
-  console.log('def', defaults)
-  console.log('vals', allVals[0])
 }
 
 var test = reactive([5])
 
-// watch(count, (newVal) => {
-// })
-
-// function testupdate () {
-//   test.push(1)
-// }
-
-// function testupdate2() {
-//   test.push(1)
-//   allVals.push(defaults)
-// }
 </script>
 <template>
   <!-- instance size buttons -->
   <ol class="options-bar">
-    <!-- <li class="option">
-      <button @click="testerfunc">tester button</button>
-    </li> -->
     <li class="option">
       <button @click="modrow('dec')">- Remove Row -</button>
     </li>
@@ -110,7 +86,6 @@ var test = reactive([5])
     <li class="option">  
       <button @click="modrow('rst')">Reset Rows</button>
     </li>
-    <!-- show explanation checkbox -->
     <li class="option">
       <input type="checkbox" id="checkbox" v-model="explain"/> 
       <label for="checkbox">show explanation</label>
@@ -120,13 +95,7 @@ var test = reactive([5])
       <div><b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b></div>
     </li>
   </ol>
-  <!-- <div class="calcs"> -->
-    <!-- calculator iterator -->
-    <!-- <button @click="testupdate">o</button>
-    <button @click="testupdate2">asdasdf</button> -->
     <li v-for="i in allVals.length">
-      <!-- :vals="allVals[i]" -->
-      <!-- {{value}} -->
       <Calculator
       v-bind="allVals[i-1]"
       @emitSUs="(val) => {allSUs[i-1] = val}"
@@ -134,14 +103,10 @@ var test = reactive([5])
       :doExplain="explain"
       />
     </li>
-    <!-- </div> -->
-    <!-- {{allSUs.toLocaleString()}} -->
-    <!-- <div class="calcs"> -->
       <div class="right">
         <b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b>
       </div>
   <li v-for="i in test.length"></li>
-  <!-- </div> -->
 </template>
 
 <style scoped>
