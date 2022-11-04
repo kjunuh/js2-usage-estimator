@@ -6,7 +6,6 @@ const count = ref(1)
 var explain = ref(false)
 
 // interface allVals []
-var allVals: Array<{}> = reactive([])
 
 interface allSUs {}
 var allSUs: Array<number> = reactive([])
@@ -15,9 +14,19 @@ const SUTotal = computed(() => {
   allSUs.forEach(a => sum += a)
   return sum
 })
-
-
-const defaults = {
+  
+interface calcVals {
+  vcpus: number,
+  hrs: number,
+  days: number,
+  weeks: number,
+  users: number,
+  flavorId: number,
+  multiplier: number,
+  prefix: string,
+}
+  
+const defaults: calcVals = {
   vcpus: 1,
   hrs: 24,
   days: 7,
@@ -28,25 +37,32 @@ const defaults = {
   prefix: 'm3'
 }
 
+interface calcValsArray extends Array<calcVals>{}
+  
+var allVals: calcValsArray = reactive([])
+
+allVals = JSON.parse(localStorage.getItem("storedVals") || "[]")
+
 onMounted(() => {
-  console.log('localstore', localStorage.getItem('storedVals'))
-  count.value = JSON.parse(localStorage.getItem("count") || JSON.parse('1'))
-  explain.value = (localStorage.getItem("explain") === null) ? false : true
-  // console.log(localStorage.getItem('storedVals'))
-  if((localStorage.getItem('storedVals') || []).length == 0) {
-    allVals.push(defaults)
-    console.log(allVals)
-    console.log("nostorage")
-  } else {
-    // JSON.parse(localStorage.getItem('storedVals') || "").forEach((val: any) => {
-    //   allVals.push(val)
-    // })
-    // console.log(JSON.parse(localStorage.getItem('storedVals') || ""))
-    allVals = JSON.parse(localStorage.getItem('storedVals') || "fail")
-    console.log("LOADED FROM STORAGE", allVals)
-  }
-  // allVals.pus h(defaults)
-  // console.log("allvals", allVals)
+  // // console.log('localstore', localStorage.getItem('storedVals'))
+  // count.value = JSON.parse(localStorage.getItem("count") || JSON.parse('1'))
+  // explain.value = (localStorage.getItem("explain") === null) ? false : true
+  // // console.log(localStorage.getItem('storedVals'))
+  // if((localStorage.getItem('storedVals') || []).length == 0) {
+  //   allVals.push(defaults)
+  //   // console.log(allVals)
+  //   // console.log("nostorage")
+  // } else {
+  //   // JSON.parse(localStorage.getItem('storedVals') || "").forEach((val: any) => {
+  //   //   allVals.push(val)
+  //   // })
+  //   // console.log(JSON.parse(localStorage.getItem('storedVals') || ""))
+  //   allVals = JSON.parse(localStorage.getItem('storedVals') || "fail")
+  //   // console.log("LOADED FROM STORAGE", allVals)
+  // }
+  // // allVals.push(defaults)
+  // // console.log("allvals", allVals)
+
 })
 
 watch(explain, (newVal) => {
@@ -75,7 +91,7 @@ function modrow (type: string) {
 
 function storeLocal (i: number, val: number) {
   localStorage.setItem('storedVals', JSON.stringify(allVals))
-  // console.log(JSON.stringify(val), i)
+  console.log(JSON.stringify(val), i)
 }
 
 function testerfunc () {
@@ -90,6 +106,7 @@ function testerfunc () {
 </script>
 <template>
   <!-- instance size buttons -->
+  {{allVals}}
   <ol class="options-bar">
     <li class="option">
       <button @click="testerfunc">tester button</button>
@@ -116,9 +133,10 @@ function testerfunc () {
   </ol>
   <!-- <div class="calcs"> -->
     <!-- calculator iterator -->
-    <li v-for="i in count">
+    <li v-for="value, i in allVals">
+      <!-- :vals="allVals[i]" -->
       <Calculator 
-        v-bind="allVals[i]"
+        v-bind="value" 
         @emitSUs="(val) => {allSUs[i-1] = val}" 
         @storeVals="(val) => {allVals[i-1] = val; storeLocal(i, val)}" 
         :doExplain="explain"

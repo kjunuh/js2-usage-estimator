@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from 'vue'
-
+interface calcVals {
+  vcpus: number,
+  hrs: number,
+  days: number,
+  weeks: number,
+  users: number,
+  flavorId: number,
+  multiplier: number,
+  prefix: string,
+}
+  
 const props = defineProps<{
   doExplain: boolean
 
@@ -12,8 +22,13 @@ const props = defineProps<{
   flavorId:number
   multiplier:number
   prefix: string
+  // vals: calcVals
 }>()
+
 const emit = defineEmits(['emitSUs', 'storeVals'])
+onMounted(() => {
+  console.log(props)
+})
 
 var vals = reactive({
   vcpus : props.vcpus,
