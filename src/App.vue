@@ -42,51 +42,33 @@ interface calcValsArray extends Array<calcVals>{}
 var allVals: calcValsArray = reactive([])
 
 allVals = JSON.parse(localStorage.getItem("storedVals") || "[]")
-
-onMounted(() => {
-  // // console.log('localstore', localStorage.getItem('storedVals'))
-  // count.value = JSON.parse(localStorage.getItem("count") || JSON.parse('1'))
-  // explain.value = (localStorage.getItem("explain") === null) ? false : true
-  // // console.log(localStorage.getItem('storedVals'))
-  // if((localStorage.getItem('storedVals') || []).length == 0) {
-  //   allVals.push(defaults)
-  //   // console.log(allVals)
-  //   // console.log("nostorage")
-  // } else {
-  //   // JSON.parse(localStorage.getItem('storedVals') || "").forEach((val: any) => {
-  //   //   allVals.push(val)
-  //   // })
-  //   // console.log(JSON.parse(localStorage.getItem('storedVals') || ""))
-  //   allVals = JSON.parse(localStorage.getItem('storedVals') || "fail")
-  //   // console.log("LOADED FROM STORAGE", allVals)
-  // }
-  // // allVals.push(defaults)
-  // // console.log("allvals", allVals)
-
-})
+if (allVals.length == 0) {
+  allVals.push(defaults)
+}
 
 watch(explain, (newVal) => {
   (newVal) ? localStorage.setItem("explain", "true") : localStorage.removeItem("explain")
 })
 
 function modrow (type: string) {
-  if(count.value != 1 && type == 'dec') {
-    count.value-- 
-    allSUs.pop()
+  if(type == 'dec' && allVals.length > 1) {
+    console.log(allVals)
     allVals.pop()
+    console.log(allVals)
   }
-  if(count.value != 100 && type == 'inc') {
-    count.value++
+  if(type == 'inc' && allVals.length < 100) {
+    console.log(allVals)
     allVals.push(defaults)
+    console.log(allVals)
   }
   if(type=='rst') {
-    while (count.value > 1) {
+    while (allVals.length > 1) {
       modrow('dec')
     }
   }
   localStorage.setItem('count', JSON.stringify(count.value))
-  // console.log(JSON.stringify(allVals))
   localStorage.setItem('storedVals', JSON.stringify(allVals))
+  // console.log(JSON.stringify(allVals))
 }
 
 function storeLocal (i: number, val: number) {
@@ -106,7 +88,6 @@ function testerfunc () {
 </script>
 <template>
   <!-- instance size buttons -->
-  {{allVals}}
   <ol class="options-bar">
     <li class="option">
       <button @click="testerfunc">tester button</button>
@@ -135,10 +116,12 @@ function testerfunc () {
     <!-- calculator iterator -->
     <li v-for="value, i in allVals">
       <!-- :vals="allVals[i]" -->
+      {{value}}
+      {{i}}
       <Calculator 
         v-bind="value" 
-        @emitSUs="(val) => {allSUs[i-1] = val}" 
-        @storeVals="(val) => {allVals[i-1] = val; storeLocal(i, val)}" 
+        @emitSUs="(val) => {allSUs[i] = val}" 
+        @storeVals="(val) => {allVals[i] = val; storeLocal(i, val)}" 
         :doExplain="explain"
       />
         <!-- @storeVals="(val) => {allVals[i-1] = val}" -->

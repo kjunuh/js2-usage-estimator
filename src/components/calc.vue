@@ -49,11 +49,12 @@ const calcTotalSUs = computed(() => {
   // localStorage.set('test', 'testval')
   return total
 })
+
 // var calcTotalSUs = ref(vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users)
 // onMounted(() => {
 //   calcTotalSUs.value = vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
-
 // })
+
 watch(vals, (newValue) => {
   emit('storeVals', newValue)
   console.log('childemit', newValue)
