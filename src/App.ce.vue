@@ -56,11 +56,11 @@ const defaults: calcVals = {
 
 interface calcValsArray extends Array<calcVals>{}
   
-var allVals: calcValsArray = reactive([])
+const allVals = ref<calcValsArray>([])
 
-allVals = JSON.parse(localStorage.getItem("storedVals") || "[]")
-if (allVals.length == 0) {
-  allVals.push(defaults)
+allVals.value = JSON.parse(localStorage.getItem("storedVals") || "[]")
+if (allVals.value.length != 0) {
+  allVals.value = [defaults];
 }
 
 // function getIndivTotal(prefix: string) {
@@ -83,17 +83,17 @@ watch(explain, (newVal) => {
 })
 
 function modrow (type: string) {
-  if(type == 'dec' && allVals.length > 1) {
-    test.pop()
-    allVals.pop()
+  if(type == 'dec' && allVals.value.length > 1) {
+    // test.pop()
+    allVals.value.pop()
     allSUs.pop()
   }
-  if(type == 'inc' && allVals.length < 100) {
-    test.push(1)  
-    allVals.push(defaults)
+  if(type == 'inc' && allVals.value.length < 100) {
+    // test.push(1)  
+    allVals.value.push(defaults)
   }
   if(type=='rst') {
-    while (allVals.length > 1) {
+    while (allVals.value.length > 1) {
       modrow('dec')
     }
   }
@@ -105,7 +105,7 @@ function storeLocal (i: number, val: number) {
   localStorage.setItem('storedVals', JSON.stringify(allVals))
 }
 
-var test = reactive([5])
+// var test = reactive([5])
 
 const styles = {
   ["options-bar"]: {
@@ -158,7 +158,8 @@ const styles = {
       <div :style="styles['right']">
         <b>All Instance Total Credits: {{SUTotal.toLocaleString()}}</b>
       </div>
-  <li v-for="i in test.length"></li>
+  <!-- <li v-for="i in test.length"></li> -->
+  <!-- {{test}} -->
 </template>
 
 
