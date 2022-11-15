@@ -3,7 +3,11 @@ import {ref, reactive, computed, onMounted, watch} from 'vue'
 import Calculator from './components/calc.vue'
 
 const count = ref(1)
+
 var explain = ref(false)
+onMounted(() => {
+  explain.value = (localStorage.getItem("explain") === null) ? false : true
+})
 
 interface allSUs {}
 var allSUs: Array<number> = reactive([])
@@ -12,6 +16,21 @@ const SUTotal = computed(() => {
   allSUs.forEach(a => sum += a)
   return sum
 })
+
+// var cpuTotal = (() => {
+//   let sum = 0
+//   let values = allVals.filter((elem) => elem.prefix == 'm3')
+//   values.forEach((val) => sum += val.multiplier*val.vcpus*val.hrs*val.days*val.weeks*val.users)
+//   return sum
+// })
+// // const gpuTotal = computed (() => {
+// //   return allVals.filter((elem) => elem.prefix == 'g3')
+// // })
+// // const lmTotal = computed (() => {
+// //   return allVals.filter((elem) => elem.prefix == 'r3')
+// // })
+
+
   
 interface calcVals {
   vcpus: number,
@@ -43,6 +62,21 @@ allVals = JSON.parse(localStorage.getItem("storedVals") || "[]")
 if (allVals.length == 0) {
   allVals.push(defaults)
 }
+
+// function getIndivTotal(prefix: string) {
+//   allVals.filter((elem) => elem.prefix == prefix)
+//   return 2
+// }
+
+// function updateTotals () {
+//   cpuTotal = getIndivTotal('m3')
+//   getIndivTotal('g3')
+//   getIndivTotal('r3')
+// }
+
+// watch(allVals, (newVal) => {
+//   getIndivTotal('m3')
+// })
 
 watch(explain, (newVal) => {
   (newVal) ? localStorage.setItem("explain", "true") : localStorage.removeItem("explain")
@@ -110,19 +144,19 @@ const styles = {
     </li>
     
     <li :style="styles['option']">  
-      <div><b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b></div>
+      <div><b>All Instance Total Credits: {{SUTotal.toLocaleString()}}</b></div>
     </li>
   </ol>
     <li v-for="i in allVals.length">
       <Calculator
       v-bind="allVals[i-1]"
       @emitSUs="(val) => {allSUs[i-1] = val}"
-      @storeVals="(val) => {allVals[i-1] = val; storeLocal(i-1, val)}"
+      @storeVals="(val) => {allVals[i-1] = val; storeLocal(i-1, val);}"
       :doExplain="explain"
       />
     </li>
       <div :style="styles['right']">
-        <b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b>
+        <b>All Instance Total Credits: {{SUTotal.toLocaleString()}}</b>
       </div>
   <li v-for="i in test.length"></li>
 </template>

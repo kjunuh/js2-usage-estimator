@@ -122,15 +122,15 @@ const styles = {
             <input v-model.number="vals.weeks"/>
         </li>
         <li :style="styles['calc-item']">
-            <div>SUs per instance</div>
+            <div>Credits per instance</div>
             <div>{{(calcTotalSUs/(vals.users)).toLocaleString()}}</div>
         </li>
         <li :style="styles['calc-item']">
-            <div>Total SUs</div>
+            <div>Total Credits</div>
             <div>{{calcTotalSUs.toLocaleString()}} </div>
         </li>
     </ul>
-    <div v-if="doExplain" > cost for {{vals.vcpus}} vCPU x {{vals.multiplier}} flavor multiplier ({{vals.prefix}}) x {{vals.hrs}} hours/day x {{vals.days}} days/week x {{vals.weeks}} weeks = {{calcTotalSUs/(vals.users)}} per user x {{vals.users}} users = {{calcTotalSUs.toLocaleString()}} SUs</div>
+    <div v-if="doExplain" > cost for {{vals.vcpus}} vCPU x {{vals.multiplier}} flavor multiplier ({{vals.prefix}}) x {{vals.hrs}} hours/day x {{vals.days}} days/week x {{vals.weeks}} weeks = {{calcTotalSUs/(vals.users)}} per user x {{vals.users}} users = {{calcTotalSUs.toLocaleString()}} Credits</div>
     <br>
 </main>
 </template>
