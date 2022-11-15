@@ -1,6 +1,7 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import App from "./App.ce.vue";
 
-// import './assets/main.css'
+// import "./assets/main.css";
 
-createApp(App).mount('#app')
+import { defineCustomElement } from "vue";
+const UsageEstimator = defineCustomElement(App);
+customElements.define("usage-estimator", UsageEstimator);

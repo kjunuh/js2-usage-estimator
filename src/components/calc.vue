@@ -10,7 +10,7 @@ interface calcVals {
   multiplier: number,
   prefix: string,
 }
-  
+
 const props = defineProps<{
   doExplain: boolean
 
@@ -78,41 +78,54 @@ function calcMultiplier() {
   vals.vcpus =  flavorlist.filter((elem) => elem.id == vals.flavorId)[0].vcpus
 }
 
+const styles = {
+  ["calc-list"]: {
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "flex-start",
+    padding: 0,
+    margin: 0,
+    listStyle: "none",
+  },
+  ["calc-item"]: {
+    padding: "5px",
+  },
+};
 </script>
 
 <template>
     <main>
-    <ul class="calc-list">
-        <li class="calc-item">
+    <ul :style="styles['calc-list']">
+        <li :style="styles['calc-item']">
             <div>Instance Size:</div>
-            <select v-model="vals.flavorId" @change="calcMultiplier()"> 
-                <option v-for="flavor in flavorlist" :value="flavor.id"> 
+            <select v-model="vals.flavorId" @change="calcMultiplier()">
+                <option v-for="flavor in flavorlist" :value="flavor.id">
                     {{flavor.name}} ({{flavor.vcpus}} vCPUs)
-                </option>    
+                </option>
             </select>
         </li>
-        <li class="calc-item">
+        <li :style="styles['calc-item']">
             <div style="display:flex, flex-direction:">Number of instances</div>
             <input v-model.number="vals.users"/>
         </li>
-        <li class="calc-item">
+        <li :style="styles['calc-item']">
             <div>Hours per day</div>
             <input v-model.number="vals.hrs"/>
         </li>
-        <li class="calc-item">
+        <li :style="styles['calc-item']">
             <div>Days per week</div>
             <input v-model.number="vals.days"/>
         </li>
-        <li class="calc-item">
+        <li :style="styles['calc-item']">
             <div>Total weeks</div>
             <input v-model.number="vals.weeks"/>
         </li>
-        <li class="calc-item">
+        <li :style="styles['calc-item']">
             <div>SUs per instance</div>
             <div>{{(calcTotalSUs/(vals.users)).toLocaleString()}}</div>
         </li>
-        <li class="calc-item">
-            <div>Total SUs</div> 
+        <li :style="styles['calc-item']">
+            <div>Total SUs</div>
             <div>{{calcTotalSUs.toLocaleString()}} </div>
         </li>
     </ul>
@@ -120,18 +133,3 @@ function calcMultiplier() {
     <br>
 </main>
 </template>
-
-<style scoped>
-
-.calc-list {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-.calc-item{
-    padding: 5px;
-}
-</style>
