@@ -90,7 +90,8 @@ const styles = {
   ["calc-item"]: {
     padding: "5px",
   },
-};
+}
+
 </script>
 
 <template>

@@ -73,25 +73,43 @@ function storeLocal (i: number, val: number) {
 
 var test = reactive([5])
 
+const styles = {
+  ["options-bar"]: {
+    display: "flex",
+    flexFlow: "row wrap",
+    justifyContent: "flex-start",
+    padding: 0,
+    margin: 0,
+    listStyle: "none",
+  },
+  ["option"]: {
+    padding: "5px",
+  },
+  ["right"]: {
+    alignSelf: "right",
+    marginLeft: "760px"
+  }
+}
+
 </script>
 <template>
   <!-- instance size buttons -->
-  <ol class="options-bar">
-    <li class="option">
+  <ol :style="styles['options-bar']">
+    <li :style="styles['option']">
       <button @click="modrow('dec')">- Remove Row -</button>
     </li>
-    <li class="option">  
+    <li :style="styles['option']">  
       <button @click="modrow('inc')">+ Add Row +</button>
     </li>
-    <li class="option">  
+    <li :style="styles['option']">  
       <button @click="modrow('rst')">Reset Rows</button>
     </li>
-    <li class="option">
+    <li :style="styles['option']">
       <input type="checkbox" id="checkbox" v-model="explain"/> 
       <label for="checkbox">show explanation</label>
     </li>
     
-    <li class="option">  
+    <li :style="styles['option']">  
       <div><b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b></div>
     </li>
   </ol>
@@ -103,26 +121,10 @@ var test = reactive([5])
       :doExplain="explain"
       />
     </li>
-      <div class="right">
+      <div :style="styles['right']">
         <b>All Instance Total SUs: {{SUTotal.toLocaleString()}}</b>
       </div>
   <li v-for="i in test.length"></li>
 </template>
 
-<style scoped>
-.options-bar {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-.option{
-  padding: 5px;
-}
-.right {
-  align-self: right;
-  margin-left: 760px;
-}
-</style>
+
