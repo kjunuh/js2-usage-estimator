@@ -4,13 +4,13 @@ import Calculator from './components/calc.vue'
 
 const count = ref(1)
 
-var explain = ref(false)
+const explain = ref(false)
 onMounted(() => {
   explain.value = (localStorage.getItem("explain") === null) ? false : true
 })
 
 interface allSUs {}
-var allSUs: Array<number> = reactive([])
+const allSUs: Array<number> = reactive([])
 const SUTotal = computed(() => {
   let sum = 0
   allSUs.forEach(a => sum += a)
@@ -29,8 +29,6 @@ const SUTotal = computed(() => {
 // // const lmTotal = computed (() => {
 // //   return allVals.filter((elem) => elem.prefix == 'r3')
 // // })
-
-
   
 interface calcVals {
   vcpus: number,
@@ -55,28 +53,33 @@ const defaults: calcVals = {
 }
 
 interface calcValsArray extends Array<calcVals>{}
-  
+
 const allVals = ref<calcValsArray>([])
 
 allVals.value = JSON.parse(localStorage.getItem("storedVals") || "[]")
-if (allVals.value.length != 0) {
+if (allVals.value.length == 0) {
   allVals.value = [defaults];
 }
 
-// function getIndivTotal(prefix: string) {
-//   allVals.filter((elem) => elem.prefix == prefix)
-//   return 2
-// }
+function sumVals(vals: calcVals) {
+  return vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
+}
 
-// function updateTotals () {
-//   cpuTotal = getIndivTotal('m3')
-//   getIndivTotal('g3')
-//   getIndivTotal('r3')
-// }
-
-// watch(allVals, (newVal) => {
-//   getIndivTotal('m3')
-// })
+const cpuTotal = computed(() => {
+  let sum = 0
+  allVals.value.filter((elem) => elem.prefix == "m3").forEach(a => sum += sumVals(a))
+  return sum
+}) 
+const gpuTotal = computed(() => {
+  let sum = 0
+  allVals.value.filter((elem) => elem.prefix == "g3").forEach(a => sum += sumVals(a))
+  return sum
+}) 
+const lmTotal = computed(() => {
+  let sum = 0
+  allVals.value.filter((elem) => elem.prefix == "r3").forEach(a => sum += sumVals(a))
+  return sum
+}) 
 
 watch(explain, (newVal) => {
   (newVal) ? localStorage.setItem("explain", "true") : localStorage.removeItem("explain")
@@ -96,11 +99,11 @@ function modrow (type: string) {
     }
   }
   localStorage.setItem('count', JSON.stringify(count.value))
-  localStorage.setItem('storedVals', JSON.stringify(allVals))
+  localStorage.setItem('storedVals', JSON.stringify(allVals.value))
 }
 
 function storeLocal (i: number, val: number) {
-  localStorage.setItem('storedVals', JSON.stringify(allVals))
+  localStorage.setItem('storedVals', JSON.stringify(allVals.value))
 }
 
 
@@ -124,26 +127,40 @@ const styles = {
 
 </script>
 <template>
+  <table style="width:1000px">
+    <tr>
+      <td v-if="cpuTotal">CPU</td>
+      <td v-if="gpuTotal">GPU</td>
+      <td v-if="lmTotal">LM</td>
+      <td>Total Credits</td>
+    </tr>
+    <tr>
+      <td v-if="cpuTotal">{{cpuTotal}}</td>
+      <td v-if="gpuTotal">{{gpuTotal}}</td>
+      <td v-if="lmTotal">{{lmTotal}}</td>
+      <td>{{SUTotal}}</td>
+    </tr>
+  </table>
   <!-- instance size buttons -->
-  <ol :style="styles['options-bar']">
-    <li :style="styles['option']">
+  <table>
+    <td>
       <button @click="modrow('dec')">- Remove Row -</button>
-    </li>
-    <li :style="styles['option']">  
+    </td>
+    <td>  
       <button @click="modrow('inc')">+ Add Row +</button>
-    </li>
-    <li :style="styles['option']">  
+    </td>
+    <td>  
       <button @click="modrow('rst')">Reset Rows</button>
-    </li>
-    <li :style="styles['option']">
+    </td>
+    <td>
       <input type="checkbox" id="checkbox" v-model="explain"/> 
       <label for="checkbox">show explanation</label>
-    </li>
-    
-    <li :style="styles['option']">  
+    </td>
+  </table>
+    <!-- <li :style="styles['option']">  
       <div><b>All Instance Total Credits: {{SUTotal.toLocaleString()}}</b></div>
-    </li>
-  </ol>
+    </li> -->
+  <!-- </ol> -->
     <li v-for="i in allVals.length">
       <Calculator
       v-bind="allVals[i-1]"

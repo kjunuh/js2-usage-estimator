@@ -27,7 +27,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['emitSUs', 'storeVals'])
 
-var vals = reactive({
+const vals = reactive({
   vcpus : props.vcpus,
   hrs : props.hrs,
   days : props.days,
