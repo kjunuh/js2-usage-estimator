@@ -16,19 +16,6 @@ const SUTotal = computed(() => {
   allSUs.forEach(a => sum += a)
   return sum
 })
-
-// var cpuTotal = (() => {
-//   let sum = 0
-//   let values = allVals.filter((elem) => elem.prefix == 'm3')
-//   values.forEach((val) => sum += val.multiplier*val.vcpus*val.hrs*val.days*val.weeks*val.users)
-//   return sum
-// })
-// // const gpuTotal = computed (() => {
-// //   return allVals.filter((elem) => elem.prefix == 'g3')
-// // })
-// // const lmTotal = computed (() => {
-// //   return allVals.filter((elem) => elem.prefix == 'r3')
-// // })
   
 interface calcVals {
   vcpus: number,
@@ -127,20 +114,7 @@ const styles = {
 
 </script>
 <template>
-  <table style="width:1000px">
-    <tr>
-      <td v-if="cpuTotal">CPU</td>
-      <td v-if="gpuTotal">GPU</td>
-      <td v-if="lmTotal">LM</td>
-      <td>Total Credits</td>
-    </tr>
-    <tr>
-      <td v-if="cpuTotal">{{cpuTotal}}</td>
-      <td v-if="gpuTotal">{{gpuTotal}}</td>
-      <td v-if="lmTotal">{{lmTotal}}</td>
-      <td>{{SUTotal}}</td>
-    </tr>
-  </table>
+
   <!-- instance size buttons -->
   <table>
     <td>
@@ -157,21 +131,39 @@ const styles = {
       <label for="checkbox">show explanation</label>
     </td>
   </table>
-    <!-- <li :style="styles['option']">  
-      <div><b>All Instance Total Credits: {{SUTotal.toLocaleString()}}</b></div>
-    </li> -->
-  <!-- </ol> -->
-    <li v-for="i in allVals.length">
-      <Calculator
-      v-bind="allVals[i-1]"
-      @emitSUs="(val) => {allSUs[i-1] = val}"
-      @storeVals="(val) => {allVals[i-1] = val; storeLocal(i-1, val);}"
-      :doExplain="explain"
-      />
-    </li>
-      <div :style="styles['right']">
-        <b>All Instance Total Credits: {{SUTotal.toLocaleString()}}</b>
-      </div>
+
+  <!-- totals table -->
+  <table style="border-spacing: 5px;">
+    <tr>
+      <td style="text-align: right"><b>Instance Type:</b></td>
+      <td v-if="cpuTotal"><b>CPU (m3)</b></td>
+      <td v-if="gpuTotal"><b>GPU (g3)</b></td>
+      <td v-if="lmTotal"><b>Large Memory (r3)</b></td>
+      <td><b>Total Credits</b></td>
+    </tr>
+    <tr>
+      <td style="text-align: right">Credits:</td>
+      <td v-if="cpuTotal">{{cpuTotal.toLocaleString()}}</td>
+      <td v-if="gpuTotal">{{gpuTotal.toLocaleString()}}</td>
+      <td v-if="lmTotal">{{lmTotal.toLocaleString()}}</td>
+      <td><b>{{SUTotal.toLocaleString()}}</b></td>
+    </tr>
+  </table>
+
+  <!-- calculator object -->
+  <li v-for="i in allVals.length">
+    <Calculator
+    v-bind="allVals[i-1]"
+    @emitSUs="(val) => {allSUs[i-1] = val}"
+    @storeVals="(val) => {allVals[i-1] = val; storeLocal(i-1, val);}"
+    :doExplain="explain"
+    />
+  </li>
+
+  <!-- bottom sum -->
+  <div :style="styles['right']">
+    <b>All Instance Total Credits: {{SUTotal.toLocaleString()}}</b>
+  </div>
 </template>
 
 

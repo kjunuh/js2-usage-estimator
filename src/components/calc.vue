@@ -130,7 +130,7 @@ const styles = {
             <div>{{calcTotalSUs.toLocaleString()}} </div>
         </li>
     </ul>
-    <div v-if="doExplain" > cost for {{vals.vcpus}} vCPU x {{vals.multiplier}} flavor multiplier ({{vals.prefix}}) x {{vals.hrs}} hours/day x {{vals.days}} days/week x {{vals.weeks}} weeks = {{calcTotalSUs/(vals.users)}} per user x {{vals.users}} users = {{calcTotalSUs.toLocaleString()}} Credits</div>
+    <div v-if="doExplain" > cost for {{vals.vcpus}} vCPU x {{vals.multiplier}} flavor multiplier ({{vals.prefix}}) x {{vals.hrs}} hours/day x {{vals.days}} days/week x {{vals.weeks}} weeks = {{(calcTotalSUs/(vals.users)).toLocaleString()}} per instance x {{vals.users}} instances = {{calcTotalSUs.toLocaleString()}} Credits</div>
     <br>
 </main>
 </template>
