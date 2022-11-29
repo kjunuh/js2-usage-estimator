@@ -86,7 +86,8 @@ const styles = {
     padding: 0,
     margin: 0,
     listStyle: "none",
-    alignItems: "baseline"
+    alignItems: "baseline",
+    gap: "5px"
   },
   ["calc-item"]: {
     padding: "5px",
@@ -107,8 +108,8 @@ const styles = {
             </select>
         </li>
         <li :style="styles['calc-item']">
-            <div style="display:flex, flex-direction:">Number of instances</div>
-            <input size="10" v-model.number="vals.users"/>
+            <div>Number of instances</div>
+            <input size="5" v-model.number="vals.users"/>
         </li>
         <li :style="styles['calc-item']">
             <div>Active hours per day</div>
@@ -130,7 +131,7 @@ const styles = {
         </li>
         <li :style="styles['calc-item']">
             <div>Total weeks</div>
-            <input size="10" v-model.number="vals.weeks"/>
+            <input size="3" v-model.number="vals.weeks"/>
         </li>
         <!-- <li :style="styles['calc-item']">
             <div>SUs per instance</div>

@@ -149,6 +149,7 @@ const styles = {
   <!-- totals table -->
   <table style="border-spacing: 5px;">
     <tr>
+      <td><b><u>Totals:</u></b></td>
       <td style="text-align: right"><b>Instance Type:</b></td>
       <td v-if="cpuTotal"><b>CPU (m3)</b></td>
       <td v-if="gpuTotal"><b>GPU (g3)</b></td>
@@ -156,6 +157,7 @@ const styles = {
       <td><b>Total SUs</b></td>
     </tr>
     <tr>
+      <td></td>
       <td style="text-align: right">SUs:</td>
       <td v-if="cpuTotal">{{cpuTotal.toLocaleString()}}</td>
       <td v-if="gpuTotal">{{gpuTotal.toLocaleString()}}</td>
