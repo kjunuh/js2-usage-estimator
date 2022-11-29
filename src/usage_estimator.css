@@ -1,0 +1,15 @@
+.options-bar {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.option{
+    padding: 5px;
+}
+.right {
+    align-self: right;
+    margin-left: 760px;
+}

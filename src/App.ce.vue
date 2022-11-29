@@ -97,7 +97,7 @@ function storeLocal (i: number, val: number) {
 const styles = {
   ["options-bar"]: {
     display: "flex",
-    flexFlow: "row wrap",
+    // flexFlow: "row wrap",
     justifyContent: "flex-start",
     padding: 0,
     margin: 0,
@@ -117,6 +117,7 @@ const styles = {
 
   <!-- instance size buttons -->
   <table>
+    <th>Options:</th>
     <td>
       <button @click="modrow('dec')">- Remove Row -</button>
     </td>
@@ -132,6 +133,19 @@ const styles = {
     </td>
   </table>
 
+
+
+  <!-- calculator object -->
+  <hr>
+  <li v-for="i in allVals.length" style="list-style:none;">
+    <Calculator
+    v-bind="allVals[i-1]"
+    @emitSUs="(val) => {allSUs[i-1] = val}"
+    @storeVals="(val) => {allVals[i-1] = val; storeLocal(i-1, val);}"
+    :doExplain="explain"
+    />
+    <hr>
+  </li>
   <!-- totals table -->
   <table style="border-spacing: 5px;">
     <tr>
@@ -139,31 +153,16 @@ const styles = {
       <td v-if="cpuTotal"><b>CPU (m3)</b></td>
       <td v-if="gpuTotal"><b>GPU (g3)</b></td>
       <td v-if="lmTotal"><b>Large Memory (r3)</b></td>
-      <td><b>Total Credits</b></td>
+      <td><b>Total SUs</b></td>
     </tr>
     <tr>
-      <td style="text-align: right">Credits:</td>
+      <td style="text-align: right">SUs:</td>
       <td v-if="cpuTotal">{{cpuTotal.toLocaleString()}}</td>
       <td v-if="gpuTotal">{{gpuTotal.toLocaleString()}}</td>
       <td v-if="lmTotal">{{lmTotal.toLocaleString()}}</td>
       <td><b>{{SUTotal.toLocaleString()}}</b></td>
     </tr>
   </table>
-
-  <!-- calculator object -->
-  <li v-for="i in allVals.length">
-    <Calculator
-    v-bind="allVals[i-1]"
-    @emitSUs="(val) => {allSUs[i-1] = val}"
-    @storeVals="(val) => {allVals[i-1] = val; storeLocal(i-1, val);}"
-    :doExplain="explain"
-    />
-  </li>
-
-  <!-- bottom sum -->
-  <div :style="styles['right']">
-    <b>All Instance Total Credits: {{SUTotal.toLocaleString()}}</b>
-  </div>
 </template>
 
 

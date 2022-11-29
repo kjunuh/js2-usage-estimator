@@ -81,11 +81,12 @@ function calcMultiplier() {
 const styles = {
   ["calc-list"]: {
     display: "flex",
-    flexFlow: "row wrap",
+    // flexFlow: "row wrap",
     justifyContent: "flex-start",
     padding: 0,
     margin: 0,
     listStyle: "none",
+    alignItems: "baseline"
   },
   ["calc-item"]: {
     padding: "5px",
@@ -107,30 +108,40 @@ const styles = {
         </li>
         <li :style="styles['calc-item']">
             <div style="display:flex, flex-direction:">Number of instances</div>
-            <input v-model.number="vals.users"/>
+            <input size="10" v-model.number="vals.users"/>
         </li>
         <li :style="styles['calc-item']">
-            <div>Hours per day</div>
-            <input v-model.number="vals.hrs"/>
+            <div>Active hours per day</div>
+            <!-- <input size="10" v-model.number="vals.hrs"/> -->
+            <select v-model.number="vals.hrs">
+              <option v-for="i in 24" :value="i">
+                {{i}}
+              </option>
+            </select>
         </li>
         <li :style="styles['calc-item']">
-            <div>Days per week</div>
-            <input v-model.number="vals.days"/>
+            <div>Active days per week</div>
+            <!-- <input size="10" v-model.number="vals.days"/> -->
+            <select v-model.number="vals.days">
+              <option v-for="i in 7" :value="i">
+                {{i}}
+              </option>
+            </select>
         </li>
         <li :style="styles['calc-item']">
             <div>Total weeks</div>
-            <input v-model.number="vals.weeks"/>
+            <input size="10" v-model.number="vals.weeks"/>
         </li>
-        <li :style="styles['calc-item']">
-            <div>Credits per instance</div>
+        <!-- <li :style="styles['calc-item']">
+            <div>SUs per instance</div>
             <div>{{(calcTotalSUs/(vals.users)).toLocaleString()}}</div>
-        </li>
+        </li> -->
         <li :style="styles['calc-item']">
-            <div>Total Credits</div>
+            <div>SUs</div>
             <div>{{calcTotalSUs.toLocaleString()}} </div>
         </li>
     </ul>
-    <div v-if="doExplain" > cost for {{vals.vcpus}} vCPU x {{vals.multiplier}} flavor multiplier ({{vals.prefix}}) x {{vals.hrs}} hours/day x {{vals.days}} days/week x {{vals.weeks}} weeks = {{(calcTotalSUs/(vals.users)).toLocaleString()}} per instance x {{vals.users}} instances = {{calcTotalSUs.toLocaleString()}} Credits</div>
+    <div v-if="doExplain" > cost for {{vals.vcpus}} vCPU x {{vals.multiplier}} flavor multiplier ({{vals.prefix}}) x {{vals.hrs}} hours/day x {{vals.days}} days/week x {{vals.weeks}} weeks = {{(calcTotalSUs/(vals.users)).toLocaleString()}} per instance x {{vals.users}} instances = {{calcTotalSUs.toLocaleString()}} SUs</div>
     <br>
 </main>
 </template>
