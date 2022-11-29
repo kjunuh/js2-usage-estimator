@@ -1,15 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted } from 'vue'
-interface calcVals {
-  vcpus: number,
-  hrs: number,
-  days: number,
-  weeks: number,
-  users: number,
-  flavorId: number,
-  multiplier: number,
-  prefix: string,
-}
+import { reactive, computed, watch } from 'vue'
 
 const props = defineProps<{
   doExplain: boolean
@@ -48,7 +38,7 @@ watch(vals, (newValue) => {
   emit('storeVals', newValue)
 })
 
-
+// VM flavors can be found here: https://docs.jetstream-cloud.org/general/vmsizes/
 const flavorlist = reactive([
   {name: 'm3.tiny', vcpus:1, id:78},
   {name: 'm3.small', vcpus:2, id:18},
@@ -81,7 +71,6 @@ function calcMultiplier() {
 const styles = {
   ["calc-list"]: {
     display: "flex",
-    // flexFlow: "row wrap",
     justifyContent: "flex-start",
     padding: 0,
     margin: 0,

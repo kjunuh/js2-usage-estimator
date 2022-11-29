@@ -1,6 +1,7 @@
-# usage-estimator
+# js2-usage-estimator
+[Original GitLab issue](https://gitlab.com/jetstream-cloud/project-mgt/-/issues/66)
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a simple Vue+TypeScript app designed to make it easier for instructors and PIs to estimate their SU needs on Jetstream2. 
 
 ## Recommended IDE Setup
 

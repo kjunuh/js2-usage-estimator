@@ -4,18 +4,14 @@ import Calculator from './components/calc.vue'
 
 const count = ref(1)
 
-const explain = ref(false)
 onMounted(() => {
+
   explain.value = (localStorage.getItem("explain") === null) ? false : true
 })
 
 interface allSUs {}
 const allSUs: Array<number> = reactive([])
-const SUTotal = computed(() => {
-  let sum = 0
-  allSUs.forEach(a => sum += a)
-  return sum
-})
+
   
 interface calcVals {
   vcpus: number,
@@ -43,11 +39,29 @@ interface calcValsArray extends Array<calcVals>{}
 
 const allVals = ref<calcValsArray>([])
 
+const explain = ref(false)
+onMounted(() => {
+  explain.value = (localStorage.getItem("explain") === null) ? false : true
+})
+
+watch(explain, (newVal) => {
+  (newVal) ? localStorage.setItem("explain", "true") : localStorage.removeItem("explain")
+})
+
+
 allVals.value = JSON.parse(localStorage.getItem("storedVals") || "[]")
 if (allVals.value.length == 0) {
   allVals.value = [defaults];
 }
 
+
+const SUTotal = computed(() => {
+  let sum = 0
+  allSUs.forEach(a => sum += a)
+  return sum
+})
+
+// Computation of per-type totals
 function sumVals(vals: calcVals) {
   return vals.multiplier*vals.vcpus*vals.hrs*vals.days*vals.weeks*vals.users
 }
@@ -67,10 +81,6 @@ const lmTotal = computed(() => {
   allVals.value.filter((elem) => elem.prefix == "r3").forEach(a => sum += sumVals(a))
   return sum
 }) 
-
-watch(explain, (newVal) => {
-  (newVal) ? localStorage.setItem("explain", "true") : localStorage.removeItem("explain")
-})
 
 function modrow (type: string) {
   if(type == 'dec' && allVals.value.length > 1) {
@@ -93,26 +103,8 @@ function storeLocal (i: number, val: number) {
   localStorage.setItem('storedVals', JSON.stringify(allVals.value))
 }
 
-
-const styles = {
-  ["options-bar"]: {
-    display: "flex",
-    // flexFlow: "row wrap",
-    justifyContent: "flex-start",
-    padding: 0,
-    margin: 0,
-    listStyle: "none",
-  },
-  ["option"]: {
-    padding: "5px",
-  },
-  ["right"]: {
-    alignSelf: "right",
-    marginLeft: "760px"
-  }
-}
-
 </script>
+
 <template>
 
   <!-- instance size buttons -->
@@ -133,8 +125,6 @@ const styles = {
     </td>
   </table>
 
-
-
   <!-- calculator object -->
   <hr>
   <li v-for="i in allVals.length" style="list-style:none;">
@@ -146,6 +136,7 @@ const styles = {
     />
     <hr>
   </li>
+
   <!-- totals table -->
   <table style="border-spacing: 5px;">
     <tr>
@@ -165,6 +156,7 @@ const styles = {
       <td><b>{{SUTotal.toLocaleString()}}</b></td>
     </tr>
   </table>
+
 </template>
 
 
