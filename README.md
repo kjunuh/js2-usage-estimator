@@ -2,6 +2,7 @@
 [Original GitLab issue](https://gitlab.com/jetstream-cloud/project-mgt/-/issues/66)
 
 [Current live page](https://docs.jetstream-cloud.org/alloc/estimator/)
+
 This is a simple Vue+TypeScript app designed to make it easier for instructors and PIs to estimate their SU needs on Jetstream2. 
 
 ## Recommended IDE Setup
